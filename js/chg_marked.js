@@ -22,7 +22,8 @@ function unescape(html) {
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&amp;/g, '&')
-    .replace(/<\/?em>/g,'_')
+    .replace(/<\/?em>/g,'*')
+    .replace(/<?em>/g,'*')
 }
 
 /* 增加 extend */
