@@ -96,7 +96,7 @@ void dfs1(int u,int pre,int d){ //
             size[u] +=size[v];
 
             //更新重儿子
-            if(son[u] == -1 || size[v] > szie[ son[u] ])
+            if(son[u] == -1 || size[v] > size[ son[u] ])
                 son[u] = v;
         }
     }
@@ -115,7 +115,7 @@ void dfs1(int u,int pre,int d){ //
 void dfs2(int u,int sf ){ //
     top[u] = sf;
     if( son[u] != -1)//有重儿子
-        dfs(son[u],sf);
+        dfs2(son[u],sf);
     else     //只有叶节点没有重儿子
         return;
 
@@ -130,18 +130,49 @@ void dfs2(int u,int sf ){ //
 }
 ```
 
+### 找lca的值
+
+本质是进行跨链操作:**如果x,y不在同一条重链上,较深的点跨到另一条重链上,直到两个点都在同一条重链上**
+
+```c
+int find(int x,int y){
+    //找到两个点的重链的顶端点
+    int f1 = top[x],f2 = top[y];
+    int tmp = 0;
+    while(f1 != f2){
+
+        //从深度较深的点 向上爬
+        if( dep[f1] < dep[f2]){
+            swap(f1,f2);
+            swap(x,y);
+        }
+        //交换后 y所在重链的 dep[ top[y] ] < dep[ top[x] ]
+        //x top[x] 较深
+
+        //跨链
+        x =  fa[f1];
+        f1 = top[x];
+    }
+
+    //返回较浅的那个点
+    if( dep[x] > dep[y])
+        swap(x,y);
+    return x;
+}
+```
+
 ## 具体代码
 
 ![4](./树链剖分4.png)
 
 数据:
-第一行表示有m条边
+第一行表示有m条边,root点是那个
 第2行到第m+1行,每行两个数i,j,表示一条边上的两个点,其中i为父点
 第m+2行表示有n个询问
 接下来n行,表示n个询问
 
 ```
-12
+12 1
 1 2
 1 3
 2 4
@@ -163,4 +194,117 @@ void dfs2(int u,int sf ){ //
 **代码:**
 
 ```c
+#include <cstdio>
+#include <cstring>
+
+
+#define maxn 100
+
+int m,n;
+int root;
+
+int head[maxn];
+struct edge {
+    int next;
+    int v;
+}E[maxn];
+int cnt = 0;
+
+void addedge(int x,int y){
+    cnt++;
+    E[cnt].v = y;
+    E[cnt].next = head[x];
+    head[x] = cnt;
+}
+
+int son[maxn];
+int top[maxn];
+int dep[maxn];
+int fa[maxn];
+int size[maxn];
+
+void dfs1(int u,int pre,int d){
+    dep[u] = d;
+    fa[u] = pre;
+    size[u] = 1;
+    int i;
+    for(i=head[u];i!=-1;i=E[i].next){
+        int v = E[i].v;
+        dfs1(v,u,d+1);
+        size[u] += size[v];
+        if(son[u] == -1 || size[v] > size[ son[u] ])
+            son[u] = v;
+    }
+}
+
+void dfs2(int u,int sf){
+    top[u] = sf;
+    if(son[u] != -1)
+        dfs2(son[u],sf);
+    else
+        return ;
+    int i;
+
+    for(i=head[u];i!=-1;i=E[i].next){
+        int v = E[i].v;
+        if( v!= son[u])
+            dfs2(v,v);
+    }
+}
+
+void swap(int &x,int &y){
+    int t = x;
+    x = y;
+    y =t;
+}
+
+//找到lca(x,y)
+int find(int x,int y){
+    //找到两个点的重链的顶端点
+    int f1 = top[x],f2 = top[y];
+    int tmp = 0;
+    while(f1 != f2){
+
+        //从深度较深的点 向上爬
+        if( dep[f1] < dep[f2]){
+            swap(f1,f2);
+            swap(x,y);
+        }
+        //交换后 y所在重链的 dep[ top[y] ] < dep[ top[x] ]
+        //x top[x] 较深
+
+        //跨链
+        x =  fa[f1];
+        f1 = top[x];
+    }
+
+    //返回较浅的那个点
+    if( dep[x] > dep[y])
+        swap(x,y);
+    return x;
+}
+
+int main(){
+    memset(head,-1,sizeof(head));
+    memset(son,-1,sizeof(son));
+    scanf("%d%d",&m,&root);
+    int i;
+    for (i=1;i<=m;i++){
+        int x,y;
+        scanf("%d%d",&x,&y);
+        addedge(x,y);
+    }
+    dfs1(1,1,1);
+    dfs2(1,1);
+    
+    scanf("%d",&n);
+    int x,y;
+    for(i=1;i<=n;i++){
+        scanf("%d%d",&x,&y);
+        int ans = find(x,y);
+        printf("%d\n",ans);
+    }
+
+    return 0;
+}
 ```
