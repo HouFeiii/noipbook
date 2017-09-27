@@ -129,6 +129,7 @@
         * [Prim算法](#book/树/最小生成树/prim)
         * [Kruskal算法](#book/树/最小生成树/kruskal)
         * [次最小生成树](#book/树/次最小生成树)
+    * [树上差分](#book/树/树上差分/index)
 * [图](#book/图/index)
     * [图的存储](#book/图/图的存储/index)
         * [邻接矩阵](#book/图/图的存储/邻接矩阵)
