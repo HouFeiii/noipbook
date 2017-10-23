@@ -107,7 +107,7 @@ a^{im-j} \equiv b(\bmod\ p)
 
 这表示$$i$$取$$[1,m]$$,$$j$$取$$[0,m]$$后,$$i\cdot m -j$$的取值是$$[0,p]$$,又加上公式$$ (a^m)^i \equiv b\cdot a^j(\bmod\  p)$$,我们可以**先枚举$$b \cdot a^j \bmod p$$的值,存到hash表中,然后枚举$$(a^m)^i \bmod p$$的值,如果到hash表中找到对应的值,那这个时候对应的j和i就是最小x值$$i\cdot m -j $$**
 
-注意:因为我们在写代码的时候m是`sqrt(b)`向上取整,所以我们算出的$$i \cot m -j$$ 有可能会超过p,所以我们最终结果要$$(i \cdot m -j) \bmod p$$
+注意:因为我们在写代码的时候m是`sqrt(b)`向上取整,所以我们算出的$$i \cdot m -j$$ 有可能会超过p,所以我们最终结果要$$(i \cdot m -j) \bmod p$$
 
 
 ## 代码
