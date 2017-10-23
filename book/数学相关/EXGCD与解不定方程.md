@@ -386,3 +386,10 @@ cogs上
 | 1265 | [NOIP2012] 同余方程 |
 | 2057 | [ZLXOI2015]殉国     |
 | 2547 | 军队                |
+
+经典的裸题SDOI2011 计算器
+
+题目解析 http://hzwer.com/5878.html
+
+
+第二问求axΞ b(mod n)，转化为ax=ny+b，转化为ax+ny=b，利用拓展欧几里得算法求出ax+ny=gcd(a,n)，如果b不是gcd的倍数则无解否则为x/gcd*b。
