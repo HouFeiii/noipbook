@@ -31,7 +31,6 @@ a^x \equiv b( \bmod p)
 
 ### 阶段一: 
 
-
 首先我们证明:
 
 ```math
@@ -86,13 +85,13 @@ a^{p-1} = a^{p-1 \bmod p-1} = a^{0}
 我们令$$x=i \cdot m -j,m=\left \lceil  \sqrt{q}\right \rceil$$,得到
 
 ```math
-a^{im-j} \equiv b(\bmod p)
+a^{im-j} \equiv b(\bmod\ p)
 ```
 
 移项:
 
 ```math
-(a^m)^j \equiv b\cdot a^j(\bmod p)
+(a^m)^i \equiv b\cdot a^j(\bmod\  p)
 ```
 
 
@@ -106,7 +105,70 @@ a^{im-j} \equiv b(\bmod p)
 | ... | ...   | ...                          |
 | m   | [0,m] | [m^2,m^2-1,m^2-2,...m*(m-1)] |
 
-## 题目
+这表示$$i$$取$$[1,m]$$,$$j$$取$$[0,m]$$后,$$i\cdot m -j$$的取值是$$[0,p]$$,又加上公式$$ (a^m)^i \equiv b\cdot a^j(\bmod\  p)$$,我们可以**先枚举$$b \cdot a^j \bmod p的值$$,存到hash表中,然后枚举$$(a^m)^i \bmod p$$的值,如果到hash表中找到对应的值,那这个时候对应的j和i就是最小x值$$i\cdot m -j $$**
+
+注意:因为我们在写代码的时候m是`sqrt(b)`向上取整,所以我们算出的$$i \cot m -j$$ 有可能会超过p,所以我们最终结果要$$(i \cdot m -j) \bmod p$$
+
+
+## 代码
+
+```c
+#include <cstdio>
+#include <cmath>
+#include <map>
+
+using namespace std;
+
+typedef long long ll;
+
+map<ll,int> hash_table;
+
+ll a,b,p,ans;
+
+ll quick_pow(ll a,ll b){
+    ll ret=1; 
+    ll base =a;
+    for( ;b;b = b >>1){
+        if( b & 1)
+            ret =ret * base %p;
+        base = base *base %p;
+    }
+    return ret %p;
+}
+
+
+int main(){
+    scanf("%lld%lld%lld",&a,&b,&p);
+    if( a % p == 0 ){ // 不互质 没有解
+        printf("No Solution.");
+        return 0;
+    }
+    int m = ceil(sqrt(p));
+    int i;
+    int v = b %p;
+    hash_table[v] = 1; // a^0
+    for(i =1;i <=m;i++){
+        v = v*a %p;
+        hash_table[v] = i+1; // a^i*b mod p = v;
+    }
+
+    int t = quick_pow(a,m); // a^m
+    v = 1;
+    for(i = 1;i <=m ;i++){
+        v = v *t % p;
+        int k = hash_table[v];
+
+        if(k){ // 找到了
+            printf("%lld",i*m-(k-1));
+            return 0;
+        }
+    }
+    printf("No Solution.");
+    return 0;
+}
+
+```
+## 练习题目
 
 
 经典的裸题SDOI2011 计算器
