@@ -159,7 +159,7 @@ int main(){
         int k = hash_table[v];
 
         if(k){ // 找到了
-            printf("%lld",i*m-(k-1));
+            printf("%lld",(i*m % p-(k-1)) %p);
             return 0;
         }
     }
