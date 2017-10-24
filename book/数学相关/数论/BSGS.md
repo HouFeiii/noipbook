@@ -82,7 +82,7 @@ a^{p-1} = a^{p-1 \bmod p-1} = a^{0}
 
 ### 阶段二
 
-我们令$$x=i \cdot m -j,m=\left \lceil  \sqrt{q}\right \rceil$$,得到
+我们令$$x=i \cdot m -j,m=\left \lceil  \sqrt{p}\right \rceil$$,得到
 
 ```math
 a^{im-j} \equiv b(\bmod\ p)
