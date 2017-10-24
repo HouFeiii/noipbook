@@ -69,7 +69,7 @@ a^{k-m(p-1)} \equiv a^k(\bmod p)
 a^{k \bmod p-1} \equiv a^k(\bmod p)
 ```
 
-最终说明:当$$p$$为素数且$$gcd(a,b)=1$$(互质)时,$$a^k mod p$$的值
+最终说明:当$$p$$为素数且$$gcd(a,b)=1$$(互质)时,$$a^k \bmod p$$的值是循环的,循环范围是$$[0,p-1]$$,下证
 
 ```math
 \begin{matrix}
